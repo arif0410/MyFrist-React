@@ -1,17 +1,14 @@
-import { useEffect } from "react";
-import "./MyStyle.css";
-import { useState } from "react";
-
+import React from "react";
+import Button from "./components/Elements/Button"
 function App() {
-  const [count, setCount] = useState[0];
-  useEffect(()=> {
-    
-  })
-  return (
-    <div className="flex bg-slate-300 items-center">
-      hajobel
+   return (
+    <div className="flex justify-center bg-blue-600 min-h-screen items-center">
+      <div className="flex gap-x-2">
+        <Button warna="bg-black" >Hai Badut</Button>
+        <Button warna="bg-red-700"> Kamu Lagi apa</Button>
+        <Button warna="bg-slate-700">Dont Die.!</Button>
+      </div>
     </div>
   )
 }
-
 export default App;
