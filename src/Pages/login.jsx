@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 const LoginPage = () => {
     
     return (
-        <AuthLayouts title="Login">
+        <AuthLayouts title="Login" type="login">
             <FormLogin/>
-            <p className="text-center text-slate-500 text-sm mt-5">
+            {/* <p className="text-center text-slate-500 text-sm mt-5">
                 Don't Have an Account.?{" "}
                 <Link to="/register" className="font-bold text-blue-600 hover:underline">Sign Up</Link>
-            </p>
+            </p> */}
         </AuthLayouts>
     )
 }
