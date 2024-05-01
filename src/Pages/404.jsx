@@ -8,7 +8,7 @@ const ErrorPage = () => {
                     <h1 className="text-3xl font-bold">404</h1>
                     <h2 className="text-xl">Oops! Page Not Found</h2>
                     <h3 className="text-slate-500">Sorry, Unexpeected Error has Occurred</h3>
-                    <p className="font-bold size-8">{Error.statusText ||Error.message}</p>
+                    <p className="font-bold justify-center text-center size-18">{Error.statusText ||Error.message}</p>
                 </div>
             </div>
         </div>

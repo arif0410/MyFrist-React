@@ -4,8 +4,8 @@ const AuthLayouts = (props) => {
     const { children, title, type } = props;
     
     return (
-        <div className="flex border-slate-100 rounded-lg shadow-lg dark:border-slate-500 justify-center bg-slate-400 min-h-screen items-center">
-            <div className="w-full max-w-xs">
+        <div className="flex border-slate-100 rounded-lg shadow-lg dark:border-slate-800 justify-center bg-slate-400 min-h-screen items-center">
+            <div className="w-full max-w-xs border border-black rounded-xl px-4 shadow bg-slate-300">
                 <h1 className="text-3xl font-bold mb-2 text-blue-600">{title}</h1>
                 <p className="font-medium text-slate-500 mb-8">Welcome, Please enter your details</p>
                 {children}
