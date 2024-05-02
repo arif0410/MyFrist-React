@@ -14,6 +14,17 @@ class Counter extends React.Component {
         }));
     };
 
+    componentDidMount() {
+        this.setState({ count: 5 });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.count === 10) {
+            this.setState({ count: 0 });
+            console.log("prevState.count", prevState.count);
+            console.log("this.state.count", this.state.count);
+        }   
+    }
     render() {
         return (
             <div className="flex  w-100 text-center justify-center items-center">

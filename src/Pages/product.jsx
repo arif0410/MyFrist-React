@@ -1,8 +1,8 @@
-import { Fragment } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import Counter from "../components/Fragments/a";
-import { useState } from "react";
+
 
 // const ProductPage = () => {
 //     // Create card product components and render 5 times
@@ -50,13 +50,24 @@ const products = [
 const email = localStorage.getItem('email');
 
 const ProductPage = () => {
-    const [cart, setCart] = useState([
-        {
-            id:1,
-            // name:"jordan easy",
-            qty:1,
+    const [cart, setCart] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+
+    useEffect(() => {
+        setCart(JSON.parse(localStorage.getItem('cart')) || []);
+    },[]);
+
+    useEffect(() => {
+        if (cart) {
+            const sum = cart.reduce((acc, item) => {
+                const product = products.find(p => p.id === item.id);
+                return acc + (product.price * item.qty);
+            },0);
+            setTotalPrice(sum);
+            localStorage.setItem('cart', JSON.stringify(cart));
         }
-    ]);
+    },[cart]);
+
     const hendleLogout = () => {
         localStorage.removeItem('password');
         localStorage.removeItem('email');
@@ -77,7 +88,16 @@ const ProductPage = () => {
             }
         ]);
         }
-    }
+    };
+
+    // useRef
+    const chartRef = useRef([
+        {
+            id: 1,
+            qty: 1
+        }
+    ]);
+
     return (
         <Fragment>
             <div className="bg-blue-600 flex flex-row items-center justify-end  h-20 text-white">
@@ -92,21 +112,22 @@ const ProductPage = () => {
             </div>
             <div className="flex justify-center py-5 px-3"> 
                 <div className="w-3/4 flex flex-wrap">
-                {products.map((product) =>(
-                <CardProduct key = {product.id}>
-                    <CardProduct.Header gambar={product.image} />
-                    <CardProduct.Body title={product.name}>{product.description}</CardProduct.Body>
-                    <CardProduct.Footer price={product.price} id={product.id} hendleAddToCart = {hendleAddToCart}/>
-                </CardProduct>
-                        ))}
+                    {products.map((product) =>(
+                    <CardProduct key = {product.id}>
+                        <CardProduct.Header gambar={product.image} />
+                        <CardProduct.Body title={product.name}>{product.description}</CardProduct.Body>
+                        <CardProduct.Footer price={product.price} id={product.id} hendleAddToCart = {hendleAddToCart}/>
+                    </CardProduct>
+                            ))}
                 </div>
+                
                 <div className="w-1/4 border bg-slate-200 border-gray-600 rounded-lg shadow">
                     <h1 className="text-3xl text-blue-600 font-bold">
                         Cart
                     </h1>
                     <table className="w-full text-sm text-left text-black border-separate dark:text-gray-400">
                         <thead>
-                            <tr>
+                            <tr className="bg-black text-white">
                                 <th>id</th>
                                 <th>Product</th>
                                 <th>Price</th>
@@ -115,7 +136,9 @@ const ProductPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                        {cart.map((item) => {
+
+                        {/* {chartRef.current.map((item) => { */}
+                         {cart.map((item) => {
                             console.log(item);
                             const product = products.find((product) => product.id === item.id);
                             return (
@@ -128,10 +151,19 @@ const ProductPage = () => {
                                 </tr>
                             );
                         })}
+                        <tr className=" bg-black text-white">
+                            <td colSpan={4} className="text-xl font-bold">Total Price</td>
+                            <td>
+                                <b>Rp {" "} {totalPrice.toLocaleString('id-ID',{styles:'currency',currency:'IDR'})}</b>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+            {/* <div className="mb-5 flex justify-center">
+                    <Counter/>
+            </div> */}
             
         </Fragment>
             );
