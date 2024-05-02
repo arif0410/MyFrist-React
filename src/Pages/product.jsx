@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect, useRef } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import Counter from "../components/Fragments/a";
+import { getProducts } from "../services/product.service";
 
 
 // const ProductPage = () => {
@@ -23,42 +24,43 @@ import Counter from "../components/Fragments/a";
 //         </div>
 //     );
 // }
-const products = [
-    {
-        id: 1,
-        name: 'jordan easy',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in?',
-        image: '/images/product-1.jpg',
-        price: 1000000
-    },
-    {
-        id: 2,
-        name: 'jordan runing',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in? lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in?',
-        image: '/images/fashion-shoes.jpg',
-        price: 1500000
-    },
-    {
-        id: 3,
-        name: 'jordan high',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in?',
-        image: '/images/run.jpg',
-        price: 2000000
-    }
-]
+// const products = [
+//     {
+//         id: 1,
+//         name: 'jordan easy',
+//         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in?',
+//         image: '/images/product-1.jpg',
+//         price: 1000000
+//     },
+//     {
+//         id: 2,
+//         name: 'jordan runing',
+//         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in? lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in?',
+//         image: '/images/fashion-shoes.jpg',
+//         price: 1500000
+//     },
+//     {
+//         id: 3,
+//         name: 'jordan high',
+//         description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, ab in?',
+//         image: '/images/run.jpg',
+//         price: 2000000
+//     }
+// ]
 
 const email = localStorage.getItem('email');
 
 const ProductPage = () => {
     const [cart, setCart] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         setCart(JSON.parse(localStorage.getItem('cart')) || []);
     },[]);
 
     useEffect(() => {
-        if (cart) {
+        if (products.length > 0 && cart.length < 0) {
             const sum = cart.reduce((acc, item) => {
                 const product = products.find(p => p.id === item.id);
                 return acc + (product.price * item.qty);
@@ -66,8 +68,13 @@ const ProductPage = () => {
             setTotalPrice(sum);
             localStorage.setItem('cart', JSON.stringify(cart));
         }
-    },[cart]);
+    },[cart, products]);
 
+    useEffect(() => {
+           getProducts((data) => {
+               setProducts(data);
+           });
+    },[])
     const hendleLogout = () => {
         localStorage.removeItem('password');
         localStorage.removeItem('email');
@@ -112,10 +119,10 @@ const ProductPage = () => {
             </div>
             <div className="flex justify-center py-5 px-3"> 
                 <div className="w-3/4 flex flex-wrap">
-                    {products.map((product) =>(
+                    {products.length > 0 && products.map((product) =>(
                     <CardProduct key = {product.id}>
                         <CardProduct.Header gambar={product.image} />
-                        <CardProduct.Body title={product.name}>{product.description}</CardProduct.Body>
+                        <CardProduct.Body title={product.title}>{product.description}</CardProduct.Body>
                         <CardProduct.Footer price={product.price} id={product.id} hendleAddToCart = {hendleAddToCart}/>
                     </CardProduct>
                             ))}
@@ -138,23 +145,23 @@ const ProductPage = () => {
                         <tbody>
 
                         {/* {chartRef.current.map((item) => { */}
-                         {cart.map((item) => {
+                         {products.length > 0 && cart.map((item) => {
                             console.log(item);
                             const product = products.find((product) => product.id === item.id);
                             return (
                                 <tr key={item.id}>
                                     <td>{item.id}</td>
-                                    <td>{product.name}</td>
-                                    <td>Rp {" "} {product.price.toLocaleString('id-ID',{styles:'currency',currency:'IDR'})}</td>
+                                    <td className="text-xs font-bold ">{product.title.substring(0,20)}</td>
+                                    <td>$ {" "} {product.price.toLocaleString('id-ID',{styles:'currency',currency:'USD'})}</td>
                                     <td>{item.qty}</td>
-                                    <td>Rp {" "} {(product.price * item.qty).toLocaleString('id-ID',{styles:'currency',currency:'IDR'})}</td>
+                                    <td>$ {" "} {(product.price * item.qty).toLocaleString('id-ID',{styles:'currency',currency:'USD'})}</td>
                                 </tr>
                             );
                         })}
                         <tr className=" bg-black text-white">
                             <td colSpan={4} className="text-xl font-bold">Total Price</td>
                             <td>
-                                <b>Rp {" "} {totalPrice.toLocaleString('id-ID',{styles:'currency',currency:'IDR'})}</b>
+                                <b>$ {" "} {totalPrice.toLocaleString('id-ID',{styles:'currency',currency:'USD'})}</b>
                             </td>
                         </tr>
                         </tbody>
